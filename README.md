@@ -1,2 +1,3 @@
 start:
-python cvqml.py
+
+python pycv.py
