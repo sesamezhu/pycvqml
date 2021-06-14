@@ -95,9 +95,9 @@ class CVCapture(QtCore.QObject):
                     return qim.copy()
                 elif im.shape[2] == 4:
                     w, h, _ = im.shape
-                    rgb_image = cv2.cvtColor(im, cv2.COLOR_BGRA2RGBA)
-                    flip_image = cv2.flip(rgb_image, 1)
-                    qim = QtGui.QImage(flip_image, h, w, QtGui.QImage.Format_RGBA8888)
+                    # rgb_image = cv2.cvtColor(im, cv2.COLOR_BGRA2RGBA)
+                    # flip_image = cv2.flip(rgb_image, 1)
+                    qim = QtGui.QImage(im.data, h, w, QtGui.QImage.Format_RGBA8888)
                     return qim.copy()
 
         return QtGui.QImage()

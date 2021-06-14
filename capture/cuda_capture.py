@@ -66,9 +66,9 @@ class CudaCap(VidCap):
     def read(self):
         ret, self.frame_device = self.GetDeviceFrame()
         if ret:
-            # cv.cuda.cvtColor(self.frame_device, cv.COLOR_BGRA2RGBA)
-            # cv.cuda.flip(self.frame_device, 1)
-            self.frame_device.download(self.frame_host.array)
+            colored = cv.cuda.cvtColor(self.frame_device, cv.COLOR_BGRA2RGBA)
+            flipped = cv.cuda.flip(colored, 1)
+            flipped.download(self.frame_host.array)
         return ret, self.frame_host.array
 
 
