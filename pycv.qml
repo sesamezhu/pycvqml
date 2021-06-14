@@ -11,20 +11,20 @@ Item {
         id: top_image
         width: window.width
         height: window.height
-        source: "background.png"
+        source: "../background.png"
         fillMode: Image.Tile
     }
 
     CVCapture{
-        id: cap_index
-        capType: "index"
-        index: 0
-        interval: 0
-        Component.onCompleted: cap_index.start()
+        id: cap_cuda
+        capType: "cuda"
+        url: "/video/6969012508999466304.MP4"
+        interval: 10
+        Component.onCompleted: cap_cuda.start()
     }
     CVItem  {
-        id: image_index
-        image: cap_index.image
+        id: image_cuda
+        image: cap_cuda.image
         x: 20
         y: 200
         width: 320
@@ -41,32 +41,32 @@ Item {
         font.family: "Arial"
     }
 
-
     CVCapture{
         id: cap_url
         capType: "url"
         url: "/video/6969012508999466304.MP4"
-        interval: 0
+        interval: 10
         Component.onCompleted: cap_url.start()
     }
     CVItem  {
         id: image_url
         image: cap_url.image
-        x: 520
+        x: 420
         y: 200
         width: 320
         height: 640
     }
     Label {
-        id: label2
-        x: 515
+        id: label_url
+        x: 415
         y: 140
-        text: qsTr("检测点2")
+        text: qsTr("检测点url")
         color: "#ffffff"
         font.bold: true
         font.pointSize: 16
         font.family: "Arial"
     }
+
 
     MaxRGBFilter{
         id: max_rgb_filter

@@ -1,7 +1,7 @@
 import numpy
 import time_log
 import cv2
-
+import capture.cuda_capture
 from PySide2 import QtCore, QtGui, QtQml
 
 gray_color_table = [QtGui.qRgb(i, i, i) for i in range(256)]
@@ -25,6 +25,7 @@ class CVCapture(QtCore.QObject):
         self._interval = 0
         self._cap_type = ""
         self._url = ""
+        self._id = ""
 
         self.m_videoCapture = cv2.VideoCapture()
         self.m_timer = QtCore.QBasicTimer()
@@ -41,6 +42,8 @@ class CVCapture(QtCore.QObject):
             self.m_videoCapture = cv2.VideoCapture(self.index)
         elif self.capType == "url":
             self.m_videoCapture = cv2.VideoCapture(self.url)
+        elif self.capType == "cuda":
+            self.m_videoCapture = capture.cuda_capture.CudaCap(self.url)
         if self.m_videoCapture.isOpened():
             self.m_timer.start(self.interval, self)
             self.started.emit()
@@ -62,7 +65,7 @@ class CVCapture(QtCore.QObject):
 
     @QtCore.Slot(numpy.ndarray)
     def process_image(self, frame):
-        time_log.time_log("process_image")
+        time_log.time_log(self.id + "_process_image")
         self.m_busy = True
         for f in self.m_filters:
             frame = f.process_image(frame)
@@ -90,6 +93,13 @@ class CVCapture(QtCore.QObject):
                     flip_image = cv2.flip(rgb_image, 1)
                     qim = QtGui.QImage(flip_image.data, h, w, QtGui.QImage.Format_RGB888)
                     return qim.copy()
+                elif im.shape[2] == 4:
+                    w, h, _ = im.shape
+                    rgb_image = cv2.cvtColor(im, cv2.COLOR_BGRA2RGBA)
+                    flip_image = cv2.flip(rgb_image, 1)
+                    qim = QtGui.QImage(flip_image, h, w, QtGui.QImage.Format_RGBA8888)
+                    return qim.copy()
+
         return QtGui.QImage()
 
     def get_image(self):
@@ -129,6 +139,12 @@ class CVCapture(QtCore.QObject):
     def set_url(self, value):
         self._url = value
 
+    def get_id(self):
+        return self._id
+
+    def set_id(self, value):
+        self._id = value
+
     def append_filter(self, sub):
         self.m_filters.append(sub)
 
@@ -142,3 +158,4 @@ class CVCapture(QtCore.QObject):
     interval = QtCore.Property(int, fget=get_interval, fset=set_interval)
     capType = QtCore.Property(str, fget=get_cap_type, fset=set_cap_type)
     url = QtCore.Property(str, fget=get_url, fset=set_url)
+    id = QtCore.Property(str, fget=get_id, fset=set_id)
