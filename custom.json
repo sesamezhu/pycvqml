@@ -1,0 +1,12 @@
+{
+    "version": 1,
+    "gray": false,
+    "scale_down": false,
+    "scale_up": false,
+    "hist": false,
+    "mean": false,
+    "gaussian": false,
+    "continuous": true,
+    "cuda": true,
+    "rcnn": true
+}

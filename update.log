@@ -1,0 +1,5 @@
+20210708
+conda install keras=2.1.6
+conda install scikit-image=0.17.2
+conda uninstall h5py
+conda install h5py=2.10.0
